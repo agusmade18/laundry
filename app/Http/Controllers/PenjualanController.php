@@ -131,6 +131,7 @@ class PenjualanController extends Controller
       $ph->diskon_nominal = $req->disTotN;
       $ph->grand_total = $gTotal;
       $ph->bayar = $req->bayar;
+      $ph->total_laba = $pd->sum('keuntungan');
       $ph->tanggal = date('Y-m-d', strtotime($req->tgl));
       $ph->add_by = Auth::user()->id;
       $ph->closed = '0';

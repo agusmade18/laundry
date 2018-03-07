@@ -65,7 +65,7 @@
         <!-- small box -->
         <div class="small-box bg-red">
           <div class="inner">
-            <h3>65</h3>
+            <h3>{{ $penj->count('id') }}</h3>
 
             <p>Transaksi Penjualan</p>
           </div>
@@ -109,7 +109,7 @@
     //FUNGSI AJAX
     $.ajax({
       type:"get",
-      url:"{{ url('getlengthday') }}",
+      url:"{{ url('getLaporanHarian') }}",
       dataType:"json",
       error:function(data){
         alert(JSON.stringify(data));
@@ -133,7 +133,9 @@
     //===================================================
         data.forEach(function(e)
         {
-          lineChartData.labels.push(e);
+          var dateAr = e.tanggal.split('-');
+          var newDate = dateAr[2];
+          lineChartData.labels.push(newDate);
         });
         var ctx = document.getElementById("canvas").getContext("2d");
         window.myLine = new Chart(ctx).Line(lineChartData, {

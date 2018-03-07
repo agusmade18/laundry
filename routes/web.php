@@ -13,7 +13,7 @@
 
 Auth::routes();
 Route::get('/', 'HomeController@index');
-Route::get('/getlengthday', 'HomeController@getLength');
+Route::get('/getLaporanHarian', 'HomeController@getData');
 // Route::get('/home', 'HomeController@index');
 Route::get('/logout', 'HomeController@getLogout');
 
@@ -108,3 +108,9 @@ Route::get('other/search', 'OtherController@search');
 Route::get('othr/delete/{data}', 'OtherController@delete');
 Route::post('other/save', 'OtherController@save');
 Route::post('other/update', 'OtherController@update');
+
+//data Laporan
+Route::get('laporan/harian/{time}', 'LaporanController@index');
+Route::get('laporan/harian-add/', 'LaporanController@add');
+Route::get('laporan/harian-search', 'LaporanController@search');
+Route::post('laporan/harian-save/', 'LaporanController@save');

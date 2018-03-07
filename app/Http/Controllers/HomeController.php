@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\LaundryHeader;
+use App\LaporanHarian;
+use App\PenjualanHeader;
 use Carbon\Carbon;
 use Auth;
 use Session;
@@ -36,7 +38,8 @@ class HomeController extends Controller
         $pro = LaundryHeader::where('status', '=', 'Proses')->get();
         $del = LaundryHeader::where('status', '=', 'delete')->get();
         $don = LaundryHeader::where('status', '=', 'done')->get();
-        return view('home', compact('pro', 'del', 'don', 'tgl'));
+        $penj = PenjualanHeader::all();
+        return view('home', compact('pro', 'del', 'don', 'tgl', 'penj'));
     }
 
     public function getLogout()
@@ -46,16 +49,17 @@ class HomeController extends Controller
         return redirect('/');
     }
 
-    public function getLength()
+    public function getData()
     {
-        $lTgl = new Carbon('last day of this month');
-        $length = $lTgl->day;
-        $tgl = [];
-        for($i=1;$i<=$length;$i++)
-        {
-            $tgl[] = $i;
-        }
+        $lTgl = Carbon::now();
+        $month = $lTgl->month;
+        // $tgl = [];
+        // for($i=1;$i<=$length;$i++)
+        // {
+        //     $tgl[] = $i;
+        // }
         //$tgl = LaundryHeader::all();
+        $tgl = LaporanHarian::whereMonth('tanggal', '=', $month)->get();
         echo json_encode($tgl);
     }
 }

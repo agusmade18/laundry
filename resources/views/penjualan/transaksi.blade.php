@@ -80,7 +80,7 @@
         <small>Total Belanja</small>
         <strong> <h1>Rp {{ number_format($pjDetails->sum('grand_total')) }}</h1></strong>
         <br><br><br>
-        <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#modalBayar" onclick="byr({{ $pjDetails->sum('grand_total') }})"><i class="fa  fa-opencart"></i> &nbsp Check Out</button>
+        <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#modalBayar" onclick="byr({{ $pjDetails->sum('grand_total') }})" {{ $pjDetails->sum('grand_total') == 0 ? 'disabled' : '' }}><i class="fa  fa-opencart"></i> &nbsp Check Out</button>
       </div>
     </div>
     </form>

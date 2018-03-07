@@ -9,6 +9,7 @@ use App\LaundryDetail;
 use App\LaundryHeader;
 use App\Customer;
 use App\KasBesar;
+use App\DataCash;
 use Session;
 use Datetime;
 use Auth;
@@ -111,7 +112,27 @@ class LaundryController extends Controller
         $lh->updated_at     = $this->dateNow;
         $lh->save();
 
-        $this->print($kode);
+        if($req->bayar!=0)
+        {
+            $nominal = 0;
+            if($req->bayar >= $gTotal) {
+                $nominal = $gTotal;
+            } else {
+                $nominal = $req->bayar;
+            }
+
+            $dc = new DataCash;
+            $dc->kode = $kode;
+            $dc->nominal = $nominal;
+            $dc->tanggal = $this->dateNow;
+            $dc->add_by  = Auth::user()->id;
+            $dc->status = '0';
+            $dc->created_at = $this->dateNow;
+            $dc->updated_at = $this->dateNow;
+            $dc->save();
+        }
+
+        //$this->print($kode);
 
         session()->forget('transaksi');
         $kode = "LND-".$this->makeCode();
@@ -332,10 +353,27 @@ class LaundryController extends Controller
             {
                 for($i=0;$i<$jum;$i++)
                 {
+                    $nominal = 0;
                     $lh = LaundryHeader::find($req->id[$i]);
                     $lh->status = "done";
                     if($lh->bayar < $lh->grand_total)
                     {
+                        if($lh->bayar>= $lh->grand_total)
+                        {
+                            $nominal = $lh->grand_total;
+                        } else {
+                            $nominal = $lh->grand_total - $lh->bayar;
+                        }
+                        $dc = new DataCash;
+                        $dc->kode = $lh->kode;
+                        $dc->nominal = $nominal;
+                        $dc->tanggal = $this->dateNow;
+                        $dc->add_by  = Auth::user()->id;
+                        $dc->status = '0';
+                        $dc->created_at = $this->dateNow;
+                        $dc->updated_at = $this->dateNow;
+                        $dc->save();
+                        
                         $lh->bayar = $lh->grand_total;
                     }
 
@@ -407,17 +445,23 @@ class LaundryController extends Controller
 
     public function bayar(Request $req)
     {
+        $nominal = 0;
         $lh = LaundryHeader::where('kode', '=', $req->code)->first();
         $lh->status = "done";
         $lh->tgl_keluar = $this->dateNow;
-        if($lh->bayar < $lh->grand_total)
+        $lh->diskon_persen = $req->disP;
+        $lh->diskon_nominal = $req->disN;
+        $lh->grand_total = $lh->total - $req->disN;
+
+        $stts = $lh->bayar - $lh->grand_total;
+        //dd($lh->bayar." - ". $lh->grand_total ." = ".$stts);
+        if($stts>=0)
         {
-            $lh->diskon_persen = $req->disP;
-            $lh->diskon_nominal = $req->disN;
-            $lh->bayar = $req->bayar;
-            $lh->grand_total = $lh->total - $req->disN;
-            $lh->bayar = $req->bayar;
+            $nominal = 0;
+        } else {
+            $nominal = $stts;
         }
+        $lh->bayar = $lh->bayar+$req->bayar;
         $lh->save();
 
         $kb = new KasBesar;
@@ -434,6 +478,19 @@ class LaundryController extends Controller
         $kb->created_at = $this->dateNow;
         $kb->updated_at = $this->dateNow;
         $kb->save();
+
+        if($nominal<0)
+        {
+            $dc = new DataCash;
+            $dc->kode = $req->code;
+            $dc->nominal = $nominal*-1;
+            $dc->tanggal = $this->dateNow;
+            $dc->add_by  = Auth::user()->id;
+            $dc->status = '0';
+            $dc->created_at = $this->dateNow;
+            $dc->updated_at = $this->dateNow;
+            $dc->save();
+        }
 
         Session::flash('message', 'Transaksi Kode '.$req->code.' Selesai...!');
         return redirect('laundry/view');

@@ -79,9 +79,11 @@
         </ul>
       </li>
 
-
+      @php($hk = App\Privilege::where('id_menu', '=', '1')
+      ->where('admin', '=', Auth::user()->id)->where('lihat', '=', '1')->first())
+      @if(count($hk))
       <li class="{{ Request::segment(1) == 'restok' ? 'active' : '' }}"><a href="{{ url('restok/view/now') }}"><i class="fa fa-arrow-down"></i> <span>Re-Stock Barang</span></a></li>
-
+      @endif
 
       <li class="{{ Request::segment(1) == 'biaya-bulanan' ? 'active' : '' }} treeview">
         <a href="#">
@@ -126,9 +128,8 @@
           <li><a href="index2.html"><i class="fa fa-circle-o"></i> Admin</a></li>
         </ul>
       </li>
-      
 
-      <li class="{{-- active --}} treeview">
+      <li class="{{ Request::segment(1) == 'laporan' ? 'active' : '' }} treeview">
         <a href="#">
           <i class="fa fa-paperclip"></i> <span>Laporan</span>
           <span class="pull-right-container">
@@ -136,7 +137,7 @@
           </span>
         </a>
         <ul class="treeview-menu">
-          <li><a href="index2.html"><i class="fa fa-circle-o"></i> Laporan Harian</a></li>
+          <li class="{{ Request::segment(1) == 'laporan' && Request::segment(2) == 'harian' ? 'active' : '' }}"><a href="{{ url('laporan/harian/now') }}"><i class="fa fa-circle-o"></i> Laporan Harian</a></li>
           <li><a href="index2.html"><i class="fa fa-circle-o"></i> Laporan Bulanan</a></li>
         </ul>
       </li>

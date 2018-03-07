@@ -196,7 +196,7 @@
         <div class="form-group">
           <label for="qty" class="col-sm-3 control-label">Qty</label>
           <div class="col-sm-4">
-            <input type="number" min="1" value="1" name="qty" id="qty" placeholder="Qty" oninput="setQty()" class="form-control" >
+            <input type="number" min="1" value="1" name="qty" id="qty" placeholder="Qty" oninput="setQty()" class="form-control" required autofocus>
           </div>
           <div class="col-sm-5">
             <div id="txtQty" style="padding-top: 5px; font-weight: bold;">Total Qty : </div>
@@ -253,6 +253,7 @@
 <script type="text/javascript">
   function pilih()
   {
+    $("#qty").select();
     var arryId = $("#barang").find(":selected").val();
     if(arryId != "-1")
     {

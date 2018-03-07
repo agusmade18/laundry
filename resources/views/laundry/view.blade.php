@@ -98,6 +98,8 @@
               <span class="label label-success">Lunas</span>
               @elseif($lh->bayar <= 0)
               <span class="label label-danger">Belum Lunas</span>
+              @elseif($lh->bayar < $lh->grand_total)
+              <span class="label label-warning">Stgh Byr</span>
               @endif
             </td>
             <td class="center">
@@ -105,8 +107,9 @@
                 <a href="{{ url('laundry/done/'.$lh->kode) }}">
                   <button class="btn btn-success" type="button"><i class="fa fa-check"></i></button> 
                 </a>
-              @elseif($lh->bayar <= 0)
-                <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalBayar" onclick="bayar('{{ $lh->kode }}', '{{ $lh->grand_total }}')"><i class="fa fa-check"></i></button>
+              @elseif($lh->bayar <= 0 || $lh->bayar<$lh->grand_total)
+                <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalBayar" onclick="bayar('{{ $lh->kode }}', '{{ $lh->grand_total }}'
+                , '{{ $lh->bayar }}')"><i class="fa fa-check"></i></button>
               @endif
               <a onclick="return confirm('Batalkan Transaksi Ini?');" href="{{ url('laundry/batal/'.$lh->kode) }}">
               <button class="btn btn-danger" type="button"><i class="fa fa-remove"></i></button></a>
@@ -190,12 +193,12 @@
 </div>
 
 <script type="text/javascript">
-  function bayar(kode, total)
+  function bayar(kode, total, byr)
   {
     $("#bayar").focus();
     $("#code").val(kode);
-    $("#tot").val(total);
-    $("#totalBayar").text(convToRp(total));
+    $("#tot").val(total-byr);
+    $("#totalBayar").text(convToRp(total-byr));
   }
 
   function setDiskonPersen()
