@@ -120,7 +120,7 @@
         </table>
         <div class="row">
           <div class="col-md-1">
-            <button type="submit" name="selesai" value="done" class="btn btn-success"><i class="fa fa-check" onclick="return confirm('Selesaikan Semua Transaksi ini?')">&nbsp Done</i></button>
+            <button type="submit" name="selesai" value="done" class="btn btn-success" onclick="return confirm('Selesaikan Semua Transaksi ini?')"><i class="fa fa-check">&nbsp Done</i></button>
           </div>
           <div class="col-md-1">
             <button type="submit" name="batal" value="batal" class="btn btn-danger"><i class="fa fa-remove" onclick="return confirm('Batalkan Semua Transaksi ini?')">&nbsp Batal</i></button>

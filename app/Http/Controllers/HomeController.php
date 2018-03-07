@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\LaundryHeader;
 use App\LaporanHarian;
 use App\PenjualanHeader;
+use App\Bulan;
 use Carbon\Carbon;
 use Auth;
 use Session;
@@ -61,5 +62,16 @@ class HomeController extends Controller
         //$tgl = LaundryHeader::all();
         $tgl = LaporanHarian::whereMonth('tanggal', '=', $month)->get();
         echo json_encode($tgl);
+    }
+
+    public function getDataBulanan()
+    {
+        $bulan = Bulan::all();
+        $value = [];
+        for($i=0;$i<12;$i++)
+        {
+            $value[] = rand(10,100);
+        }
+        echo json_encode(array('bulan'=>$bulan, 'nominal'=>$value));
     }
 }

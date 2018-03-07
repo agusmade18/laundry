@@ -14,6 +14,7 @@
 Auth::routes();
 Route::get('/', 'HomeController@index');
 Route::get('/getLaporanHarian', 'HomeController@getData');
+Route::get('/getLaporanBulanan', 'HomeController@getDataBulanan');
 // Route::get('/home', 'HomeController@index');
 Route::get('/logout', 'HomeController@getLogout');
 
@@ -110,7 +111,11 @@ Route::post('other/save', 'OtherController@save');
 Route::post('other/update', 'OtherController@update');
 
 //data Laporan
+//harian
 Route::get('laporan/harian/{time}', 'LaporanController@index');
 Route::get('laporan/harian-add/', 'LaporanController@add');
 Route::get('laporan/harian-search', 'LaporanController@search');
 Route::post('laporan/harian-save/', 'LaporanController@save');
+//bulanan
+Route::get('laporan/bulanan/{time}', 'LaporanController@indexBulanan');
+Route::get('laporan/bulanan-search', 'LaporanController@search_bulanan');

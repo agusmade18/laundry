@@ -35,38 +35,29 @@
       <section class="col-lg-12 connectedSortable">
         <div class="box box-primary">
           <div class="box-header">
-            <form action="{{ url('laporan/harian-search') }}" method="get">
-              <div class="row">
-                <div class="col-md-8">
-                  <h4><strong>Data Laporan Harian</strong></h4>
-                </div>
-                <div class="col-md-2">
-                  <label class="control-label">Bulan</label>
-                  <div class="input-group">
-                    <div class="input-group-addon">
-                      <i class="fa fa-calendar"></i>
-                    </div>
-                    <select class="form-control" id="bulan" name="bulan">
-                      @foreach($bulans as $bulan)
-                      <option value="{{ $bulan->id }}" {{ $month ==  $bulan->id ? 'selected' : ''}}> {{ $bulan->nama }}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-2">
-                  <form action="" method="get">
-                  <label class="control-label">Tahun</label>
-                  <div class="input-group">
-                    <input type="number" name="tahun" id="tahun" class="form-control" value="{{ $year }}">
-                    <span class="input-group-btn">
-                      <button type="submit" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                      </button>
-                    </span>
-                  </div>
-                  </form>
-                </div>
+            <div class="row">
+              <div class="col-md-6">
+                <h4><strong>Data Laporan {{ date('d M Y', strtotime($myFDate)) }} - {{ date('d M Y', strtotime($myLDate)) }}</strong></h4>
               </div>
-            </form>
+              <div class="col-md-6">
+                <form action="{{ url('laporan/harian-search') }}" method="get">
+                  <div class="col-md-9">
+                    <label class="control-label">Tanggal</label>
+                    <div class="input-group">
+                      <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input type="text" class="form-control pull-right" name="tgl" id="reservation" value="{{ $interval }}">
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group" style="margin-top: 25px;">
+                      <button type="submit" class="btn btn-default" style="width: 100%;"><i class="fa fa-sort"></i> Sort</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
           <div class="box-body chat" id="chat-box">
             <div class="box-body table-responsive">
@@ -106,5 +97,4 @@
 
   </section>
 </div>
-</script>
 @stop

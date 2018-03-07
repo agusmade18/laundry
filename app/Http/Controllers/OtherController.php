@@ -19,8 +19,8 @@ class OtherController extends Controller
   private $dateNow;
   public function __construct()
   {
-      $this->middleware('auth');
-      $this->dateNow = Carbon::now();
+    $this->middleware('auth');
+    $this->dateNow = Carbon::now();
   }
 
   /**
