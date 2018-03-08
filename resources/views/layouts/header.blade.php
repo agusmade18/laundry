@@ -1,7 +1,8 @@
+@php($usaha = App\ProfileUsaha::find(1))
 <header class="main-header">
-  <a href="index2.html" class="logo">
-    <span class="logo-mini"><b>F</b>L</span>
-    <span class="logo-lg"><b>Fresh</b>Laundry</span>
+  <a href="{{ url('/') }}" class="logo">
+    <span class="logo-mini"><img src="{{ asset('image/') }}/{{ $usaha->image }}" width="40" height="40"></span>
+    <span class="logo-lg"><b>{{ $usaha->nama_depan }}</b>{{ $usaha->nama_belakang }}</span>
   </a>
   <nav class="navbar navbar-static-top">
     <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">

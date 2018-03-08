@@ -10,6 +10,7 @@ use App\LaundryHeader;
 use App\Customer;
 use App\KasBesar;
 use App\DataCash;
+use App\ProfileUsaha;
 use Session;
 use Datetime;
 use Auth;
@@ -132,7 +133,7 @@ class LaundryController extends Controller
             $dc->save();
         }
 
-        //$this->print($kode);
+        $this->print($kode);
 
         session()->forget('transaksi');
         $kode = "LND-".$this->makeCode();
@@ -178,6 +179,7 @@ class LaundryController extends Controller
 
     public function print($kode)
     {
+        $pr = ProfileUsaha::find(1);
         $lh = LaundryHeader::where('kode', '=', $kode)->first();
         $lDetails = LaundryDetail::where('kode', '=', $kode)->orderBy('jenis')->get();
         $i = 1;
@@ -194,9 +196,31 @@ class LaundryController extends Controller
 
         $Data  = $initialized;
         $Data .= $condensed1;
+
         $Data .= "-----------------------------------------------------------------\n";
-        $Data .= "|     ".$bold1."FRESH LAUNDRY".$bold0."      | Jalan Letda Reta No. 20 Denpasar | \n";
-        $Data .= "| Jam Buka 08.00 - 20.00  | No. Telephone : 085-739-339-461 | \n";
+        $Data .= "| ".$bold1.$pr->nama_depan." ".$pr->nama_belakang.$bold0;
+        for($j=0;$j<25-strlen("| ".$pr->nama_depan." ".$pr->nama_belakang);$j++)
+        {
+            $Data .= " ";
+        }
+        $Data .= " | ".$pr->alamat;
+        for($j=0;$j<38-strlen(" | ".$pr->alamat);$j++)
+        {
+            $Data .= " ";
+        }
+        $Data .= " | \n";
+
+        $Data .= "| Jam Opr. ".$pr->jam_opr;
+        for($j=0;$j<25-strlen("| Jam Opr. ".$pr->jam_opr);$j++)
+        {
+            $Data .= " ";
+        }
+        $Data .= " | No. Tlp : ".$pr->phone;
+        for($j=0;$j<38-strlen(" | No. Tlp : ".$pr->phone);$j++)
+        {
+            $Data .= " ";
+        }
+        $Data .= " | \n";
         $Data .= "-----------------------------------------------------------------\n";
 
         $Data .= " Kode          : ".$lh->kode."\n";

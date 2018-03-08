@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use App\LaundryHeader;
 use App\LaporanHarian;
 use App\PenjualanHeader;
 use App\Bulan;
+use App\ProfileUsaha;
 use Carbon\Carbon;
 use Auth;
 use Session;
@@ -18,9 +20,12 @@ class HomeController extends Controller
      *
      * @return void
      */
+    private $dateNow;
     public function __construct()
     {
+        
         $this->middleware('auth');
+        $this->dateNow = Carbon::now()->toDateString();
     }
 
     /**
@@ -73,5 +78,36 @@ class HomeController extends Controller
             $value[] = rand(10,100);
         }
         echo json_encode(array('bulan'=>$bulan, 'nominal'=>$value));
+    }
+
+    public function setting()
+    {
+        $profile = ProfileUsaha::find(1);
+        return view('setting', compact('profile'));
+    }
+
+    public function save(Request $req)
+    {
+        $imageName = $req->txtImage;
+        if(Input::hasFile('image')){
+            $imageName  = Input::file('image')->getClientOriginalName();
+            $file       = Input::file('image');
+            $file       = $file->move(public_path().'/image/', $file->getClientOriginalName());
+        }
+
+        $profile = ProfileUsaha::find(1);
+        $profile->nama_depan    = $req->namaDepan;
+        $profile->nama_belakang    = $req->namaBelakang;
+        $profile->alamat    = $req->alamat;
+        $profile->phone    = $req->phone;
+        $profile->email    = $req->email;
+        $profile->jam_opr    = $req->jam;
+        $profile->updated_at    = $this->dateNow;
+        $profile->admin    = Auth::user()->id;
+        $profile->image    = $imageName;
+        $profile->save();
+
+        Session::flash('message', 'Data Berhasil Dirubah...');
+        return redirect('/setting');
     }
 }

@@ -124,10 +124,12 @@
           <li class="{{ Request::segment(1) == 'master' &&  Request::segment(2) == 'laundry' ? 'active' : '' }}"><a href="{{ url('master/laundry') }}"><i class="fa fa-circle-o"></i> Barang Laundry</a></li>
           <li class="{{ Request::segment(1) == 'master' &&  Request::segment(2) == 'penjualan' ? 'active' : '' }}"><a href="{{ url('master/penjualan') }}"><i class="fa fa-circle-o"></i> Barang Jual</a></li>
           <li class="{{ Request::segment(1) == 'master' &&  Request::segment(2) == 'biayabulanan' ? 'active' : '' }}"><a href="{{ url('master/biayabulanan') }}"><i class="fa fa-circle-o"></i> Biaya Bulanan</a></li>
-          <li><a href="index2.html"><i class="fa fa-circle-o"></i> Customer</a></li>
+          <li class="{{ Request::segment(1) == 'master' &&  Request::segment(2) == 'customer' ? 'active' : '' }}"><a href="{{ url('master/customer') }}"><i class="fa fa-circle-o"></i> Customer</a></li>
           <li><a href="index2.html"><i class="fa fa-circle-o"></i> Admin</a></li>
         </ul>
       </li>
+
+      <li class="{{ Request::segment(1) == 'setting' ? 'active' : '' }}"><a href="{{ url('setting') }}"><i class="fa fa-gear"></i> <span>Setting</span></a></li>
 
       <li class="{{ Request::segment(1) == 'laporan' ? 'active' : '' }} treeview">
         <a href="#">

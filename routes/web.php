@@ -17,6 +17,10 @@ Route::get('/getLaporanHarian', 'HomeController@getData');
 Route::get('/getLaporanBulanan', 'HomeController@getDataBulanan');
 // Route::get('/home', 'HomeController@index');
 Route::get('/logout', 'HomeController@getLogout');
+//setting
+Route::get('/setting', 'HomeController@setting');
+Route::post('/setting-save', 'HomeController@save');
+
 
 //laundry controller
 Route::post('laundry/saveDetail', 'LaundryController@saveDetail');
@@ -58,6 +62,9 @@ Route::get('master/biaya-bulanan-delete/{id}', 'MasterController@biayaBulananMas
 Route::post('master/biaya-bulanan-save', 'MasterController@biayaBulananMasterSave');
 Route::post('master/biaya-bulanan-update', 'MasterController@biayaBulananMasterUpdate');
 Route::post('master/biaya-bulanan-delete-multiple', 'MasterController@biayaBulananMasterDelMultiple');
+
+//master customer
+Route::get('master/customer', 'CustomerController@index');
 
 //arus kas route
 Route::get('aruskas/kaskecilrincian', 'ArusKasController@indexKasKecilRincian');
