@@ -12,6 +12,7 @@
 */
 
 Auth::routes();
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Route::get('/', 'HomeController@index');
 Route::get('/getLaporanHarian', 'HomeController@getData');
 Route::get('/getLaporanBulanan', 'HomeController@getDataBulanan');
@@ -41,6 +42,7 @@ Route::get('laundry/hapusPermanen/{kode}', 'LaundryController@hapusPermanen');
 Route::get('laundry/search/', 'LaundryController@search');
 Route::get('laundry/canceledTransaksi/', 'LaundryController@canceledTransaksi');
 Route::get('laundry/done', 'LaundryController@transaksiDone');
+Route::get('laundry/searchDone', 'LaundryController@searchDone');
 
 //master barang laundry route
 Route::get('master/laundry', 'MasterController@index');
@@ -123,6 +125,14 @@ Route::get('laporan/harian/{time}', 'LaporanController@index');
 Route::get('laporan/harian-add/', 'LaporanController@add');
 Route::get('laporan/harian-search', 'LaporanController@search');
 Route::post('laporan/harian-save/', 'LaporanController@save');
+Route::get('laporan/harian-detail/{tanggal}', 'LaporanController@harianDetail');
 //bulanan
 Route::get('laporan/bulanan/{time}', 'LaporanController@indexBulanan');
 Route::get('laporan/bulanan-search', 'LaporanController@search_bulanan');
+
+//master data admin
+Route::get('master/admin', 'AdminController@index');
+Route::post('master/admin/save', 'AdminController@save');
+Route::get('master/admin/editprofile', 'AdminController@edit');
+Route::post('master/admin/updateProfile', 'AdminController@updateProfile');
+Route::post('master/admin/updatePassword', 'AdminController@updatePassword');

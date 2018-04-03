@@ -9,6 +9,9 @@ use App\DataCash;
 use App\PenjualanHeader;
 use App\LaundryHeader;
 use App\LaporanHarian;
+use App\Gaji;
+use App\KasBesar;
+use App\KasKecilArus;
 use Auth;
 use Session;
 
@@ -62,40 +65,51 @@ class LaporanController extends Controller
     	$dateNow = date('m/d/Y', strtotime($req->tgl));
     	$dc = DataCash::where('tanggal', '=', date('Y-m-d', strtotime($req->tgl)))->get();
     	$pj = PenjualanHeader::where('tanggal', '=', date('Y-m-d', strtotime($req->tgl)))->get();
-    	$lh = LaundryHeader::where('tgl_masuk', '=', date('Y-m-d', strtotime($req->tgl)))->get();
-    	return view('laporan.add', compact('dateNow', 'dc', 'pj', 'lh'));
+    	$lh = LaundryHeader::where('tgl_keluar', '=', date('Y-m-d', strtotime($req->tgl)))->get();
+      $peng = KasBesar::where('tanggal', '=', date('Y-m-d', strtotime($req->tgl)))->get();
+
+      $uangCash = $dc->sum('nominal') + $pj->sum('grand_total') - $peng->sum('kredit');
+    	return view('laporan.add', compact('dateNow', 'uangCash', 'pj', 'lh', 'peng'));
     }
   }
 
   public function save(Request $req)
   {
   	$cek = LaporanHarian::where('tanggal', '=', $req->myTgl)->get();
-  	if(!count($cek))
-  	{
-    	$dc = DataCash::where('tanggal', '=', date('Y-m-d', strtotime($req->myTgl)))->get();
-    	$pj = PenjualanHeader::where('tanggal', '=', date('Y-m-d', strtotime($req->myTgl)))->get();
-    	$lh = LaundryHeader::where('tgl_masuk', '=', date('Y-m-d', strtotime($req->myTgl)))->get();
+    $cekArusKasKecil = KasKecilArus::where('status', '=', '0')->get();
+    if(count($cekArusKasKecil))
+    {
+      Session::flash('error', 'Arus Kas Kecil Belum Diexport ke Kas Besar. Silahkan Export Kas Kecil ke Kas Besar...');
+    } else {
+      if(!count($cek))
+      {
+        $lapH = new LaporanHarian;
+        $lapH->tanggal = $req->myTgl;
+        $lapH->jum_laundry = $this->clearKoma($req->jumLaundry);
+        $lapH->total_laundry = $this->clearKoma($req->laundry);
+        $lapH->jum_penjualan = $this->clearKoma($req->jumJual);
+        $lapH->tot_penjualan = $this->clearKoma($req->penjualan);
+        $lapH->laba_penjualan = $this->clearKoma($req->laba);
+        $lapH->pengeluaran = $this->clearKoma($req->pengeluaran);
+        $lapH->fisik_uang = $this->clearKoma($req->fu);
+        $lapH->keterangan = $req->ket;
+        $lapH->add_by = Auth::user()->id;
+        $lapH->created_at = $this->dateNow;
+        $lapH->updated_at = $this->dateNow;
+        $lapH->save();
 
-    	$lapH = new LaporanHarian;
-    	$lapH->tanggal = $req->myTgl;
-    	$lapH->jum_laundry = $lh->count('id');
-    	$lapH->total_laundry = $lh->sum('grand_total');
-    	$lapH->jum_penjualan = $pj->count('id');
-    	$lapH->tot_penjualan = $pj->sum('grand_total');
-    	$lapH->laba_penjualan = $pj->sum('total_laba');
-    	$lapH->fisik_uang = $dc->sum('nominal');
-    	$lapH->keterangan = $req->ket;
-    	$lapH->add_by = Auth::user()->id;
-    	$lapH->created_at = $this->dateNow;
-    	$lapH->updated_at = $this->dateNow;
-			$lapH->save();
-
-			Session::flash('message', 'Data Berhasil Diclosing....');
-  	} else {
-  		Session::flash('error', 'Data Sudah Ada....');
-  	}
-
+        Session::flash('message', 'Data Berhasil Diclosing....');
+      } else {
+        Session::flash('error', 'Data Sudah Ada....');
+      }
+    }
   	return redirect('laporan/harian/now');
+  }
+
+  private function clearKoma($value)
+  {
+    $result = str_replace(',', '', $value);
+    return $result;
   }
 
   public function search(Request $req)
@@ -126,5 +140,12 @@ class LaporanController extends Controller
   {
     $param = $req->bulan."/".$req->tahun;
     return $this->indexBulanan($param);
+  }
+
+  public function harianDetail($tanggal)
+  {
+    $laundryMasuk = LaundryHeader::where('tgl_masuk', '=', $tanggal)->get();
+    $laundryKeluar = LaundryHeader::where('tgl_keluar', '=', $tanggal)->get();
+    return view('laporan.preview_harian', compact('tanggal', 'laundryMasuk', 'laundryKeluar'));
   }
 }

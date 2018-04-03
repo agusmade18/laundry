@@ -5,7 +5,7 @@
     <!-- Sidebar user panel -->
     <div class="user-panel">
       <div class="pull-left image">
-        <img src="{{ asset('lte/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
+        <img src="{{ asset('image/admin') }}/{{ Auth::user()->foto }}" class="img-circle" alt="User Image">
       </div>
       <div class="pull-left info">
         <p>{{ Auth::user()->name }}</p>
@@ -125,7 +125,7 @@
           <li class="{{ Request::segment(1) == 'master' &&  Request::segment(2) == 'penjualan' ? 'active' : '' }}"><a href="{{ url('master/penjualan') }}"><i class="fa fa-circle-o"></i> Barang Jual</a></li>
           <li class="{{ Request::segment(1) == 'master' &&  Request::segment(2) == 'biayabulanan' ? 'active' : '' }}"><a href="{{ url('master/biayabulanan') }}"><i class="fa fa-circle-o"></i> Biaya Bulanan</a></li>
           <li class="{{ Request::segment(1) == 'master' &&  Request::segment(2) == 'customer' ? 'active' : '' }}"><a href="{{ url('master/customer') }}"><i class="fa fa-circle-o"></i> Customer</a></li>
-          <li><a href="index2.html"><i class="fa fa-circle-o"></i> Admin</a></li>
+          <li><a href="{{ url('master/admin') }}"><i class="fa fa-circle-o"></i> Admin</a></li>
         </ul>
       </li>
 

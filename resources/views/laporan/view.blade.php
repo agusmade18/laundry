@@ -67,9 +67,11 @@
                   <th>Tanggal</th>
                   <th>Laundry</th>
                   <th>Penjualan</th>
+                  <th>Pengeluaran</th>
                   <th>Fisik Uang</th>
                   <th>Laba Penjualan</th>
                   <th>Keterangan</th>
+                  <th>Aksi</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -78,9 +80,15 @@
                   <td>{{ date('d M Y', strtotime($lh->tanggal)) }}</td>
                   <td>{{ $lh->jum_laundry }} Transaksi <br> {{ number_format($lh->total_laundry) }}</td>
                   <td>{{ $lh->jum_penjualan }} Transaksi <br> {{ number_format($lh->tot_penjualan) }}</td>
+                  <td>{{ number_format($lh->pengeluaran) }}</td>
                   <td>{{ number_format($lh->fisik_uang) }}</td>
                   <td>{{ number_format($lh->laba_penjualan) }}</td>
                   <td>{{ $lh->keterangan }}</td>
+                  <td>
+                    <a href="{{ url('laporan/harian-detail/'.$lh->tanggal) }}">
+                    <button class="btn btn-primary" type="button"><i class="fa fa-eye"></i></button> </a>
+                    <button class="btn btn-info" type="button"><i class="fa fa-print"></i></button>
+                  </td>
                 </tr>
                 @endforeach
                 </tbody>

@@ -173,10 +173,31 @@ class LaundryController extends Controller
 
     public function transaksiDone()
     {
-        $lhs = LaundryHeader::where('status', '=', 'done')->get();
-        return view('laundry.done', compact('lhs'));
+        $fDate = new Carbon('first day of this month');
+        $fDate = $fDate->toDateString();
+        $lDate = new Carbon('last day of this month');
+        $lDate = $lDate->toDateString();
+        $myFDate = date('m/d/Y', strtotime($fDate));
+        $myLDate = date('m/d/Y', strtotime($lDate));
+        $interval = $myFDate." - ".$myLDate;
+        $lhs = LaundryHeader::where('status', '=', 'done')
+        ->whereBetween('tgl_keluar', array($fDate, $lDate))->get();
+        return view('laundry.done', compact('lhs', 'interval'));
     }
 
+    public function searchDone(Request $req)
+    {
+        $date = $req->tgl;
+        $getDate = explode('-', $date);
+        $fDate = date('Y-m-d', strtotime(str_replace(" ", "", $getDate[0])));
+        $lDate = date('Y-m-d', strtotime(str_replace(" ", "", $getDate[1])));
+        $myFDate = date('m/d/Y', strtotime($fDate));
+        $myLDate = date('m/d/Y', strtotime($lDate));
+        $interval = $myFDate." - ".$myLDate;
+        $lhs = LaundryHeader::where('status', '=', 'done')
+        ->whereBetween('tgl_keluar', [$fDate, $lDate])->get();
+        return view('laundry.done', compact('lhs', 'interval'));
+    }
     public function print($kode)
     {
         $pr = ProfileUsaha::find(1);
@@ -380,6 +401,7 @@ class LaundryController extends Controller
                     $nominal = 0;
                     $lh = LaundryHeader::find($req->id[$i]);
                     $lh->status = "done";
+                    $lh->tgl_keluar = Carbon::now()->toDateString();
                     if($lh->bayar < $lh->grand_total)
                     {
                         if($lh->bayar>= $lh->grand_total)

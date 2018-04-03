@@ -15,9 +15,25 @@
   
   <section class="content">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-8">
         <h3><strong>Total Uang : Rp {{ number_format($lhs->sum('grand_total')) }}</strong></h3>
       </div>
+      <form action="{{ url('laundry/searchDone') }}" method="GET">
+      <div class="col-md-3">
+        <label class="control-label">Tanggal</label>
+        <div class="input-group">
+          <div class="input-group-addon">
+            <i class="fa fa-calendar"></i>
+          </div>
+          <input type="text" class="form-control pull-right" name="tgl" id="reservation" value="{{ $interval }}">
+        </div>
+      </div>
+      <div class="col-md-1">
+        <div class="form-group" style="margin-top: 25px;">
+          <button type="submit" class="btn btn-default" style="width: 100%;"><i class="fa fa-sort"></i>&nbsp Sort</button>
+        </div>
+      </div>
+      </form>
     </div>
 
     <div class="box">

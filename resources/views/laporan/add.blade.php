@@ -44,7 +44,7 @@
                   <form class="form-horizontal" action="{{ url('laporan/harian-save/') }}" method="POST">
                     {{ csrf_field() }}
                   <tr>
-                    <td width="130">Total Laundry & Transaksi</td>
+                    <td width="130">Total Penyelesaian Laundry & Jumlah Transaksi</td>
                     <td width="100">
                       <div class="form-group">
                         <input type="hidden" name="myTgl" id="myTgl" value="{{ date('Y-m-d', strtotime($_GET['tgl'])) }}">
@@ -79,10 +79,18 @@
                     </td>
                   </tr>
                   <tr>
+                    <td width="130">Total Pengeluaran</td>
+                    <td width="100" colspan="2">
+                      <div class="form-group">
+                        <input type="text" name="pengeluaran" id="pengeluaran" class="form-control" value="{{ number_format($peng->sum('kredit')) }}" readonly>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
                     <td width="130">Jml. Fisik Uang</td>
                     <td width="100" colspan="2">
                       <div class="form-group">
-                        <input type="text" name="fu" id="fu" class="form-control" value="{{ number_format($dc->sum('nominal')) }}" readonly>
+                        <input type="text" name="fu" id="fu" class="form-control" value="{{ number_format($uangCash) }}" readonly>
                       </div>
                     </td>
                   </tr>
